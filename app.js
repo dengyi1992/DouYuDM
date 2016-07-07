@@ -65,7 +65,7 @@ request('http://120.27.94.166:2999/getRooms?platform=douyu&topn='+config.topn, f
     }
     var parse = JSON.parse(body);
     for(var i=0;i<parse.data.length;i++){
-        rooms.push(parse.data[i].roomid)
+        rooms.push(parse.data[i].room_id)
     }
     rooms.forEach(function (room) {
         myEvents.emit("doit", room)
