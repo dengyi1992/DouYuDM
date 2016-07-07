@@ -22,7 +22,7 @@ exports.Douyu = function (roomID) {
         // console.log(roomID+"=========="+'[' + message.nn + ']: ' + message.txt+"  "+message.rid+" "+message.txt+" "+message.uid+" "+message.type+" ");
         message.ctime=new Date().getTime();
         data.push(message);
-        if(data.length>100){
+        if(data.length>50){
             upload.uploadSerivce(roomID,"douyu",data);
             data=[];
         }

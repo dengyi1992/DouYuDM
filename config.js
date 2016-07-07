@@ -38,7 +38,7 @@ var config = {
     host:"from office",
 
 
-    topn:10,
+    topn:30,
     db: {
        host: 'localhost',
        user: 'root',
