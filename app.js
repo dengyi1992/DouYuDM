@@ -8,6 +8,7 @@ var request = require('request');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var DY = require("./models/DY.js");
+var config = require("./config.js");
 var EventEmitter = require('events').EventEmitter;
 var myEvents = new EventEmitter();
 var app = express();
@@ -58,7 +59,7 @@ app.use(function (err, req, res, next) {
     });
 });
 rooms=[];
-request('http://120.27.94.166/ranknew/index.php/Home/MainPage/sort_rank_week_deal', function (error, response, body) {
+request('http://120.27.94.166:2999/getRooms?platform=douyu&topn='+config.topn, function (error, response, body) {
     if (error) {
         return console.log(error)
     }
