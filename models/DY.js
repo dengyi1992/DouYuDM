@@ -4,7 +4,7 @@
 var douyu = require('douyu');
 var upload = require("./upload.js");
 exports.Douyu = function (roomID) {
-    var room = new douyu.ChatRoom(roomID);
+    var room = new douyu.ChatRoom(roomID+'');
     var data=[];
     // System level events handler
     room.on('connect', function (message) {
