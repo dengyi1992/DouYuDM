@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
   if(start)
       return res.render('index', { title: 'Express' });
   start=true;
-  var rooms=["84452","657604","559052","565715","564214","337449","320604","526583","271934","208114","604016"];
+  var rooms=["321358","10000019","10001856","13703","10002242","274874","14163","84074","414818","10001568","534740"];
   rooms.forEach(function (room) {
     myEvents.emit("doit",room)
   });
