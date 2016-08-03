@@ -34,7 +34,7 @@ exports.Douyu = function (roomID) {
     room.on('uenter', function (message) {
         message.ctime = new Date().getTime();
         data.push(message);
-        if (data.length > 20) {
+        if (data.length > 100) {
             upload.uploadSerivce(roomID, "douyu", data);
             data = [];
         }
@@ -51,7 +51,7 @@ exports.Douyu = function (roomID) {
     room.on('spbc', function (message) {
         message.ctime = new Date().getTime();
         data.push(message);
-        if (data.length > 20) {
+        if (data.length > 100) {
             upload.uploadSerivce(roomID, "douyu", data);
             data = [];
         }
