@@ -9,6 +9,9 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var DY = require("./models/DY.js");
 var config = require("./config.js");
+var schedule = require('node-schedule');
+var rule = new schedule.RecurrenceRule();
+rule.second = 0;
 var EventEmitter = require('events').EventEmitter;
 var myEvents = new EventEmitter();
 var app = express();
@@ -58,20 +61,49 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
-rooms=[];
-request('http://120.27.94.166:2999/getRooms?platform=douyu&topn='+config.topn, function (error, response, body) {
-    if (error) {
-        return console.log(error)
-    }
-    var parse = JSON.parse(body);
-    for(var i=0;i<parse.data.length;i++){
-        rooms.push(parse.data[i].room_id)
-    }
-    rooms.forEach(function (room) {
-        myEvents.emit("doit", room)
+var page = 0;
+schedule.scheduleJob(rule, function () {
+    var options = {
+        method: 'GET',
+        url: 'http://capi.douyucdn.cn/api/v1/live',
+        qs: {limit: '100', offset: '' + 100 * page}
+    };
+
+    request(options, function (error, response, body) {
+        if (error) return console.log(error);
+        var parse = JSON.parse(body);
+        var rooms = [];
+        for (var i = 0; i < parse.data.length; i++) {
+            var roomId = parse.data[i].room_id;
+            rooms.push(parseInt(roomId));
+        }
+        rooms.forEach(function (room) {
+            myEvents.emit("doit", room)
+        });
+
+        // console.log(body);
     });
+    if (page > 10) {
+        this.cancel();
+        page = 0;
+    }
+
 });
-myEvents.on("doit",function (room) {
+
+// rooms = [];
+// request('http://120.27.94.166:2999/getRooms?platform=douyu&topn=' + config.topn, function (error, response, body) {
+//     if (error) {
+//         return console.log(error)
+//     }
+//     var parse = JSON.parse(body);
+//     for (var i = 0; i < parse.data.length; i++) {
+//         rooms.push(parse.data[i].room_id)
+//     }
+//     rooms.forEach(function (room) {
+//         myEvents.emit("doit", room)
+//     });
+// });
+myEvents.on("doit", function (room) {
     DY.Douyu(room);
 });
 module.exports = app;
