@@ -8,6 +8,7 @@ exports.Douyu = function (roomID) {
     var data = [];
     // System level events handler
     room.on('connect', function (message) {
+        map.set(roomID,true);
         console.log('DouyuTV ChatRoom #' + roomID + ' connected.');
     });
     room.on('error', function (error) {
@@ -15,6 +16,7 @@ exports.Douyu = function (roomID) {
     });
     room.on('close', function (hasError) {
         // room=new douyu.ChatRoom(roomID+'');
+        map.set(roomID,false);
         console.log('DouyuTV ChatRoom #' + roomID + ' disconnected' + hasError ? ' because of error.' : '.');
     });
 
