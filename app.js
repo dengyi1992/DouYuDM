@@ -61,20 +61,30 @@ app.use(function (err, req, res, next) {
 });
 rooms=[];
 map = new HashMap();
-request('http://120.27.94.166:2999/getRooms?platform=douyu&topn='+config.topn, function (error, response, body) {
-    if (error) {
-        return console.log(error)
-    }
-    var parse = JSON.parse(body);
-    for(var i=0;i<parse.data.length;i++){
-        rooms.push(parse.data[i].room_id)
-    }
-    rooms.forEach(function (room) {
-        if(map.get(room)==undefined||!map.get(room)){
-            myEvents.emit("doit", room)
+var schedule = require('node-schedule');
+var rule = new schedule.RecurrenceRule();
+var time=[];
+for(var i=0;i<60;i+=15){
+    time.push(i);
+}
+rule.minute=time;
+schedule.scheduleJob(rule,function () {
+    request('http://120.27.94.166:2999/getRooms?platform=douyu&topn='+config.topn, function (error, response, body) {
+        if (error) {
+            return console.log(error)
         }
+        var parse = JSON.parse(body);
+        for(var i=0;i<parse.data.length;i++){
+            rooms.push(parse.data[i].room_id)
+        }
+        rooms.forEach(function (room) {
+            if(map.get(room)==undefined||!map.get(room)){
+                myEvents.emit("doit", room)
+            }
+        });
     });
 });
+
 myEvents.on("doit",function (room) {
     DY.Douyu(room);
 });
